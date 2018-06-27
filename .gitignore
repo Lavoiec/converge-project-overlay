@@ -1,2 +1,4 @@
-*.json
+tree.json
+converge_vis.json
 *.pkl
+/node_modules

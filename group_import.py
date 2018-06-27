@@ -316,7 +316,7 @@ groups_data = merge_group_data(
 
 json_dict = ToJson.construct_network_graph_dict(
     df=groups_data,
-    groupbycols=['group_guid', 'name', 'description', 'time_created'],
+    groupbycols=['group_guid', 'name', 'description'],
     nestcol='similar_groups',
     nestedkeyname='similar_groups',
     drop_allps=False
@@ -368,5 +368,3 @@ mother_node = {
 
 with open('converge_vis.json', 'w') as outfile:
     json.dump(mother_node, outfile, indent=4, separators=(',', ':'))
-
-code.interact(local=locals())
