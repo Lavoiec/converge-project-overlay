@@ -163,15 +163,14 @@ def get_group_members(group_list, session=session, Base=Base, conn=conn):
     ex.
     df = get_group_members([123,456,789])
     Returns a dataframe with number of rows equal to the
-    sum of the members of each group and 3 columns
+    sum of the members of each group and 2 columns
     """
     groups_table = Base.classes.elgggroups_entity
     relationships_table = Base.classes.elggentity_relationships
     statement = (session.query(
                 # The 3 columns in the table
                 groups_table.guid,
-                relationships_table.guid_one,
-                relationships_table.time_created
+                relationships_table.guid_one
                 # Filter like one would see in SQL
             ).filter(groups_table.guid.in_(group_list))
              .filter(groups_table.guid == relationships_table.guid_two)
@@ -183,8 +182,7 @@ def get_group_members(group_list, session=session, Base=Base, conn=conn):
 
     get_all.columns = [
         'group_guid',
-        'user_guid',
-        'time_created'
+        'user_guid'
     ]
 
     get_all = get_all.apply(gccollab.convert_if_time)
@@ -337,7 +335,7 @@ for goal in sustainable_development_goals:
     # contstructs JSON object, and nests similar groups into an array
     graph_branches = ToJson.construct_network_graph_dict(
         df=temp_df,
-        groupbycols=['group_guid', 'name', 'description', 'time_created'],
+        groupbycols=['group_guid', 'name', 'description'],
         nestcol='similar_groups',
         nestedkeyname='similar_groups',
         drop_allps=False
