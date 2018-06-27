@@ -3,3 +3,4 @@ numpy==1.14.5
 beautifulsoup4==4.4.0
 sqlalchemy==1.2.8
 sshtunnel==0.1.4
+pymysql==0.9.0
