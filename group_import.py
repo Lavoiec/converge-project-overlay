@@ -6,7 +6,6 @@ import code
 from utility_funcs import remove_html, make_dataframe_from_similar_groups
 import ToJson
 
-
 """
 Purpose of this script is to present a modified prototype of the project
 overlay.
@@ -78,7 +77,9 @@ def access_groups_info(group_list, session=session, Base=Base, conn=conn):
     groups_table = Base.classes.elgggroups_entity
     statement = (session.query(groups_table)
                         .filter(groups_table.guid.in_(group_list))
-                        .statement)
+                        )
+
+    statement = statement.statement
     table = pd.read_sql(statement, conn)
 
     return table
@@ -134,9 +135,8 @@ def access_sustainable_dev_goals(group_list, session=session, Base=Base, conn=co
          .filter(metadata_table.value_id == metastrings_table.id)
         # The id for "interests" in the GCcollab db
          .filter(metadata_table.name_id == 82)
-         .statement
     )
-
+    statement = statement.statement
     get_all = pd.read_sql(statement, conn)
     get_all.columns = ['group_guid', 'tags']
 
@@ -366,3 +366,6 @@ mother_node = {
 
 with open('converge_vis.json', 'w') as outfile:
     json.dump(mother_node, outfile, indent=4, separators=(',', ':'))
+    outfile.close()
+
+gccollab.close_tunnel()

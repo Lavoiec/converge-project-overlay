@@ -32,3 +32,5 @@ addIDs(tree)
 
 with open('tree.json', 'w') as f:
      json.dump(tree, f, indent=4, separators=(',', ':'))
+
+f.close()

@@ -1,8 +1,8 @@
 import json
 import pandas as pd
 from bs4 import BeautifulSoup
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
+#from nltk.corpus import stopwords
+#from nltk.tokenize import word_tokenize
 
 
 def try_loading_json(x, lang):
@@ -31,7 +31,7 @@ def remove_html(x):
     except:
         return
  
-stop_words = stopwords.words('english')
+#stop_words = stopwords.words('english')
 
 
 def remove_stop_words(x):
