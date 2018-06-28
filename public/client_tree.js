@@ -167,7 +167,7 @@ function update(source) {
                     detachable: true
                 });
                 $('#visit-project').off('click').on('click', function() {
-                    window.location.href='https://gcconnex.gc.ca/groups/profile/' + String(d.guid);
+                    window.location.href='https://gccollab.gc.ca/groups/profile/' + String(d.guid);
                 });
                 // Remember: remove previous handler before adding a new one
                 $('#get-similar').off("click").on("click", function() {
