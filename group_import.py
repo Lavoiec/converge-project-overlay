@@ -97,7 +97,7 @@ def access_sustainable_dev_goals(group_list, session=session, Base=Base, conn=co
     conn: SQAlchemy connection
 
     Returns a DataFrame with 2 columns named
-    group_guid and tags that correspond. There may be
+    guid and tags that correspond. There may be
     multiple rows per guid, if that group has more than
     one sustainable development goal.
     """
@@ -138,7 +138,7 @@ def access_sustainable_dev_goals(group_list, session=session, Base=Base, conn=co
     )
     statement = statement.statement
     get_all = pd.read_sql(statement, conn)
-    get_all.columns = ['group_guid', 'tags']
+    get_all.columns = ['guid', 'tags']
 
     # Filtering out the tags in a multiple step process
     # Standardizing the queried tags to be lower-case
@@ -181,7 +181,7 @@ def get_group_members(group_list, session=session, Base=Base, conn=conn):
     get_all = pd.read_sql(statement, conn)
 
     get_all.columns = [
-        'group_guid',
+        'guid',
         'user_guid'
     ]
 
@@ -274,7 +274,7 @@ def extract_similar_groups(df, id_col, number_of_groups):
     sim_df = make_dataframe_from_similar_groups(df, id_col, number_of_groups)
     sim_df = pd.melt(sim_df)
     sim_df.rename(
-        columns={'variable': 'group_guid', 'value': 'similar_groups'},
+        columns={'variable': 'guid', 'value': 'similar_groups'},
         inplace=True
     )
     return sim_df
@@ -290,21 +290,21 @@ group_list = [79508, 891115, 891112, 891109, 891105, 891100, 891096, 891093, 891
 f = access_groups_info(group_list)
 f['name'] = f['name'].apply(decode_json_en)
 f['description'] = f['description'].apply(decode_json_en).apply(remove_html)
-f.rename(columns={'guid': 'group_guid'}, inplace=True)
+f.rename(columns={'guid': 'guid'}, inplace=True)
 group_memberships = get_group_members(group_list)
 tags = access_sustainable_dev_goals(group_list)
 # Calculates the similarities of members in the groups
 similar_groups = calculate_group_similarities(
     df=group_memberships,
-    groupbycol='group_guid',
+    groupbycol='guid',
     nestcol='user_guid',
     newcolname='members'
 )
 
-sim_groups = extract_similar_groups(similar_groups, 'group_guid', 5)
+sim_groups = extract_similar_groups(similar_groups, 'guid', 5)
 # Getting all of the data into one dataframe
 groups_data = merge_group_data(
-    'group_guid',
+    'guid',
     f,
     group_memberships,
     sim_groups,
@@ -314,7 +314,7 @@ groups_data = merge_group_data(
 
 json_dict = ToJson.construct_network_graph_dict(
     df=groups_data,
-    groupbycols=['group_guid', 'name', 'description'],
+    groupbycols=['guid', 'name', 'description'],
     nestcol='similar_groups',
     nestedkeyname='similar_groups',
     drop_allps=False
@@ -335,7 +335,7 @@ for goal in sustainable_development_goals:
     # contstructs JSON object, and nests similar groups into an array
     graph_branches = ToJson.construct_network_graph_dict(
         df=temp_df,
-        groupbycols=['group_guid', 'name', 'description'],
+        groupbycols=['guid', 'name', 'description'],
         nestcol='similar_groups',
         nestedkeyname='similar_groups',
         drop_allps=False
@@ -343,7 +343,7 @@ for goal in sustainable_development_goals:
     for branch in graph_branches:
         # Converts all of the numbers in each branch (group) into integers
         # This is purely so it can be published to JSON
-        branch['group_guid'] = int(branch['group_guid'])
+        branch['guid'] = int(branch['guid'])
         branch['similar_groups'] = [int(guid) for guid in branch['similar_groups']]
     # Adds the "free" and "project" attributes
     ToJson.add_node_attributes(graph_branches, project=True)
