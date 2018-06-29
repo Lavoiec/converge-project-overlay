@@ -1,5 +1,5 @@
-# converge-project-overlay
-Project Overlay Mod for the Converge Conference https://www.convergeconference.ca/
+# Converge Project Overlay
+Project Overlay Mod for the Converge Conference
 
 
 ## Rationale
